@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة فرسان الترتيل - فضل ترتيل القرآن الكريم</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cairo & FontAwesome for icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        emeraldCustom: '#059669',
+                        goldCustom: '#fbbf24',
+                        levelSupport: '#fef08a',
+                        levelMedium: '#bbf7d0',
+                        levelAdvanced: '#bfdbfe',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #022c22 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .badge-support { background-color: #fef08a; color: #854d0e; border: 2px solid #eab308; }
+        .badge-medium { background-color: #dcfce7; color: #166534; border: 2px solid #22c55e; }
+        .badge-advanced { background-color: #dbeafe; color: #1e40af; border: 2px solid #3b82f6; }
+        
+        .btn-bounce:hover {
+            transform: translateY(-3px) scale(1.02);
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.98);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
+    </style>
+</head>
+<body class="flex items-center justify-center p-2 sm:p-4 text-gray-800">
+
+    <div id="app-container" class="w-full max-w-4xl mx-auto glass-card rounded-3xl p-4 sm:p-8 relative overflow-hidden my-auto min-h-[620px] flex flex-col justify-between">
+        
+        <!-- ================= 1. شاشة البداية ================= -->
+        <div id="screen-start" class="flex flex-col items-center justify-center text-center my-auto py-6">
+            <div class="inline-block p-4 bg-emerald-100 rounded-full mb-4 shadow-inner">
+                <i class="fa-solid fa-book-quran text-6xl text-emerald-600 animate-bounce"></i>
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-emerald-800 mb-2">⭐ فرسان الترتيل ⭐</h1>
+            <p class="text-lg sm:text-xl text-emerald-700 font-bold mb-6">اللعبة التفاعلية للتقويم الختامي: درس [فضل ترتيل القرآن الكريم]</p>
+
+            <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-6 mb-8 max-w-xl text-right shadow-sm">
+                <h2 class="text-lg font-bold text-amber-900 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-compass text-amber-600"></i> تعليمات وإرشادات الفرسان:
+                </h2>
+                <ul class="text-sm sm:text-base text-amber-800 space-y-2 list-disc list-inside font-semibold">
+                    <li>أهلاً بك يا بطل الصف الثالث! ستقودك الشخصية الذكية <span class="text-emerald-700 font-bold">«سالم»</span> في هذه المغامرة.</li>
+                    <li>تتكون اللعبة من 6 محطات تتدرج في المستويات (الدعم 🟡 - المتوسط 🟢 - المتقدم 🔵).</li>
+                    <li>تتضمن اللعبة وضعين: <span class="bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded">وضع التدريب</span> (مع تغذية راجعة فورية) و<span class="bg-indigo-200 text-indigo-900 px-2 py-0.5 rounded">وضع التقييم الاختباري</span>.</li>
+                    <li>الدرجة الكلية من 6 درجات (درجة لكل سؤال تقيس ناتج تعلم محدد).</li>
+                </ul>
+            </div>
+
+            <!-- إدخال اسم الطالب واختيار النمط -->
+            <div class="w-full max-w-md space-y-4 mb-6">
+                <div>
+                    <label for="student-name" class="block text-right text-gray-700 font-bold mb-1">اسم البطل / الفارس (اختياري):</label>
+                    <input type="text" id="student-name" placeholder="اكتب اسمك هنا يا بطل..." class="w-full text-center px-4 py-3 border-2 border-emerald-400 rounded-xl focus:outline-none focus:ring-4 focus:ring-emerald-200 text-lg font-bold">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <button onclick="startGame('practice')" class="btn-bounce bg-amber-500 hover:bg-amber-600 text-white text-lg font-extrabold py-3.5 px-6 rounded-2xl shadow-lg border-b-4 border-amber-700 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i> وضع التدريب
+                    </button>
+                    <button onclick="startGame('quiz')" class="btn-bounce bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-extrabold py-3.5 px-6 rounded-2xl shadow-lg border-b-4 border-emerald-800 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-trophy text-xl"></i> التقييم النهائي
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 2. شاشة اللعب والأسئلة ================= -->
+        <div id="screen-game" class="hidden flex-col justify-between h-full flex-grow">
+            <!-- الشريط العلوي للتقدم والتفاصيل -->
+            <div>
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-emerald-100 pb-3 mb-4">
+                    <!-- اسم الطالب والنمط -->
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-extrabold text-xl shadow">
+                            <i class="fa-solid fa-child"></i>
+                        </div>
+                        <div class="text-right">
+                            <span id="display-student-name" class="font-extrabold text-emerald-900 text-lg block">البطل التفاعلي</span>
+                            <span id="display-mode-tag" class="text-xs px-2 py-0.5 rounded font-bold bg-amber-100 text-amber-800">وضع التدريب</span>
+                        </div>
+                    </div>
+
+                    <!-- شريط المستوى والشارات -->
+                    <div id="level-badge" class="badge-support px-3 py-1 rounded-full text-xs sm:text-sm font-extrabold flex items-center gap-1 shadow-sm">
+                        <i class="fa-solid fa-signal"></i> <span id="level-text">المستوى الأول - الدعم</span>
+                    </div>
+
+                    <!-- النقاط والنجوم -->
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1 bg-amber-100 border border-amber-300 px-3 py-1 rounded-xl text-amber-700 font-extrabold text-sm">
+                            <i class="fa-solid fa-star text-amber-500 text-base"></i>
+                            <span id="stars-count">0</span>/6
+                        </div>
+                        <div class="text-sm font-extrabold text-gray-500">
+                            السؤال <span id="current-q-num" class="text-emerald-700 text-lg">1</span> من 6
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شريط تقدم المراحل -->
+                <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden mb-4 shadow-inner">
+                    <div id="progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-0 transition-all duration-500"></div>
+                </div>
+
+                <!-- الشخصية الموجهة (سالم) -->
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3 mb-4 flex items-center gap-3 shadow-sm">
+                    <div class="w-12 h-12 rounded-full bg-emerald-200 flex-shrink-0 flex items-center justify-center text-emerald-700 text-2xl border-2 border-emerald-400">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-emerald-600 font-bold block">الموجه الذكي (سالم):</span>
+                        <p id="salem-guide-text" class="text-xs sm:text-sm text-emerald-900 font-extrabold">اقرأ السؤال بتمعّن يا بطل، واختر الإجابة الصحيحة لننتقل إلى المحطة التالية!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- حاوية السؤال التفاعلية -->
+            <div id="question-card" class="bg-white border-2 border-emerald-100 rounded-2xl p-4 sm:p-6 shadow-sm my-auto text-right">
+                <!-- ينزل السؤال هنا برمجياً -->
+            </div>
+
+            <!-- التغذية الراجعة الفورية (تظهر في وضع التدريب فقط) -->
+            <div id="feedback-box" class="hidden rounded-2xl p-4 my-3 text-right font-bold text-sm sm:text-base border-2 transition-all"></div>
+
+            <!-- أزرار التحكم السفلى -->
+            <div class="flex items-center justify-between mt-4 pt-2 border-t border-gray-100">
+                <button id="btn-skip" onclick="skipQuestion()" class="text-gray-500 hover:text-gray-700 font-bold text-sm underline px-2 py-1">
+                    تخطي السؤال <i class="fa-solid fa-forward"></i>
+                </button>
+                
+                <button id="btn-action" onclick="handleAction()" class="btn-bounce bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base sm:text-lg px-8 py-2.5 rounded-xl shadow-md border-b-4 border-emerald-800 flex items-center gap-2">
+                    <span>تأكيد الإجابة</span> <i class="fa-solid fa-check"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= 3. الشاشة الختامية وتحليل النتائج ================= -->
+        <div id="screen-result" class="hidden flex-col items-center justify-center text-center my-auto py-4">
+            <div id="result-icon-container" class="mb-3">
+                <!-- أيقونة تتغير بحسب النتيجة -->
+            </div>
+
+            <h2 id="result-title" class="text-2xl sm:text-4xl font-black text-emerald-800 mb-1">نتيجة تقويم الدرس</h2>
+            <p id="result-subtitle" class="text-base sm:text-lg font-extrabold text-gray-600 mb-4">بطل الترتيل: <span id="final-student-name" class="text-emerald-700"></span></p>
+
+            <!-- ملخص الدرجات والنسبة -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl mb-6">
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3">
+                    <span class="text-xs text-emerald-600 font-bold block">الدرجة الكلية</span>
+                    <span id="score-text" class="text-2xl font-black text-emerald-800">0 / 6</span>
+                </div>
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-3">
+                    <span class="text-xs text-blue-600 font-bold block">النسبة المئوية</span>
+                    <span id="percentage-text" class="text-2xl font-black text-blue-800">0%</span>
+                </div>
+                <div class="bg-green-50 border-2 border-green-200 rounded-2xl p-3">
+                    <span class="text-xs text-green-600 font-bold block">الإجابات الصحيحة</span>
+                    <span id="correct-count" class="text-2xl font-black text-green-700">0</span>
+                </div>
+                <div class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-3">
+                    <span class="text-xs text-rose-600 font-bold block">تحتاج إلى تحسين</span>
+                    <span id="wrong-count" class="text-2xl font-black text-rose-700">0</span>
+                </div>
+            </div>
+
+            <!-- تحليل نواتج التعلم للمعلم والطالب -->
+            <div class="w-full max-w-2xl bg-gray-50 border-2 border-gray-200 rounded-2xl p-4 mb-6 text-right">
+                <h3 class="font-extrabold text-emerald-900 text-base mb-3 border-b pb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-emerald-600"></i> تقرير إتقان نواتج التعلم (خاص بالمعلم والطالب):
+                </h3>
+                <div id="outcomes-analysis" class="space-y-2 text-xs sm:text-sm">
+                    <!-- ينزل تحليل نواتج التعلم هنا -->
+                </div>
+            </div>
+
+            <!-- أزرار الإجراءات -->
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="restartGame()" class="btn-bounce bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 px-6 rounded-xl shadow-lg border-b-4 border-emerald-800 flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> إعادة المحاولة
+                </button>
+                <button onclick="goHome()" class="btn-bounce bg-gray-600 hover:bg-gray-700 text-white font-extrabold py-3 px-6 rounded-xl shadow-lg border-b-4 border-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-house"></i> الشاشة الرئيسية
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ================= البرمجة والتفاعل JS ================= -->
+    <script>
+        // --- 1. بنك الأسئلة المعتمد على الدرس المرفق حصراً ---
+        const questionsBank = [
+            {
+                id: 1,
+                level: 1,
+                levelName: "المستوى الأول - الدعم 🟡",
+                levelBadgeClass: "badge-support",
+                outcome: "تفسير مفردات الحديث الشريف الحفظية",
+                type: "mcq",
+                question: "ما معنى كلمة «السَّفَرَةِ الكِرَامِ البَرَرَةِ» الواردة في الحديث الشريف؟",
+                guideText: "استعن بالصور والرموز المساعدة لاختيار المعنى الصحيح الدقيق!",
+                options: [
+                    { text: "المَلائِكَةُ 👼", correct: true },
+                    { text: "المُسَافِرُونَ بَعِيداً 🧳", correct: false },
+                    { text: "الخُدَّامُ وَالعُمَّالُ 👨‍🌾", correct: false }
+                ],
+                feedbackCorrect: "أحسنت يا بطل! السَّفرة الكرام البررة هم الملائكة المقربون.",
+                feedbackWrong: "إجابة خاطئة! المعنى المعتمد في الدرس لكلمة (السفرة الكرام البررة) هو: الملائكة."
+            },
+            {
+                id: 2,
+                level: 1,
+                levelName: "المستوى الأول - الدعم 🟡",
+                levelBadgeClass: "badge-support",
+                outcome: "التمييز بين أجر الماهر والفرق بينه وبين المتتعتع",
+                type: "tf",
+                question: "صح أم خطأ: القارئ الذي يتتعتع في قراءة القرآن ويجد مشقة وصعوبة، ليس له أي أجر على قراءته.",
+                guideText: "تذكر ما ورد في الحديث الشريف عن رحمة الله بالقارئ المجتهد!",
+                options: [
+                    { text: "صحيح", correct: false },
+                    { text: "خطأ (له أجران)", correct: true }
+                ],
+                feedbackCorrect: "رائع جداً! الإجابة خطأ، لأن الذي يتتعتع وهو عليه شاق له أجران من فضل الله.",
+                feedbackWrong: "إجابة غير صحيحة! بل له أجران: أجر التلاوة وأجر الاجتهاد والمشقة."
+            },
+            {
+                id: 3,
+                level: 2,
+                levelName: "المستوى الثاني - المتوسط 🟢",
+                levelBadgeClass: "badge-medium",
+                outcome: "تصنيف مفاهيم فضل التلاوة والأجور المترتبة عليها",
+                type: "matching",
+                question: "طابق كل قارئ بالمنزلة والأجر المستحق له كما جاء في الدرس:",
+                guideText: "صل كل حالة بالأجر والمنزلة المناسبة لها بدقة!",
+                pairs: [
+                    { item: "الماهر بالقرآن (الذي يجيد تلاوته)", target: "مع السفرة الكرام البررة (الملائكة)" },
+                    { item: "الذي يتتعتع في القرآن وهو عليه شاق", target: "له أجران (أجر التلاوة + أجر الاجتهاد)" }
+                ],
+                feedbackCorrect: "ممتاز وبطل! قمت بربط المنازل والأجور المترتبة لكل حالة بدقة عالية.",
+                feedbackWrong: "تنبيه: الماهر يكون مع الملائكة، والمتتعتع الذي يجتهد له أجران."
+            },
+            {
+                id: 4,
+                level: 2,
+                levelName: "المستوى الثاني - المتوسط 🟢",
+                levelBadgeClass: "badge-medium",
+                outcome: "ترتيب أجزاء الحديث الشريف بترتيبها الصحيح",
+                type: "ordering",
+                question: "رتب أجزاء الحديث الشريف بالترتيب الصحيح المتسلسل:",
+                guideText: "اضغط على البطاقات بالترتيب الصحيح لتركيب الحديث النبوي الشريف!",
+                parts: [
+                    "الْمَاهِرُ بِالْقُرْآنِ مَعَ السَّفَرَةِ الْكِرَامِ الْبَرَرَةِ،",
+                    "وَالَّذِي يَقْرَأُ الْقُرْآنَ وَيَتَتَعْتَعُ فِيهِ،",
+                    "وَهُوَ عَلَيْهِ شَاقٌّ لَهُ أَجْرَانِ."
+                ],
+                feedbackCorrect: "أحسنت الترتيب! الحديث النبوي اكتمل لديك بشكل صحيح تماماً.",
+                feedbackWrong: "الترتيب غير صحيح! الترتيب الصحيح هو: 1. الماهر بالقرآن... 2. والذي يقرأ القرآن ويتتعتع فيه... 3. وهو عليه شاق له أجران."
+            },
+            {
+                id: 5,
+                level: 3,
+                levelName: "المستوى الثالث - المتقدم 🔵",
+                levelBadgeClass: "badge-advanced",
+                outcome: "تطبيق المعارف لحل المشكلات العملية في التلاوة",
+                type: "scenario",
+                question: "موقف تطبيقي: زميلك جاسم يواجه صعوبة وثقلاً في لسانه أثناء تلاوة القرآن ويشعر بالحرج، كيف تنصحه بالتغلب على هذه المشكلة بناءً على ما تعلمته؟",
+                guideText: "اختر الحل العملي المكتمل والمدعوم بالإرشاد المعتمد في الدرس!",
+                options: [
+                    { text: "أنصحه بالتوقف عن التلاوة وتجنب القراءة أمام الآخرين كي لا يتلعثم.", correct: false },
+                    { text: "أنصحه بالاستمرار في التعلم، ومتابعة الاستماع للمقراين والاستمرار يومياً ليحصل على الأجرين وتتحسن تلاوته.", correct: true },
+                    { text: "أنصحه بالقراءة السريعة جداً دون الاهتمام بالنطق الصحيح.", correct: false }
+                ],
+                feedbackCorrect: "إجابة حكيمة وممتازة! الاستمرار والاجتهاد والاستماع اليومي هو طريق إتقان التلاوة ونيل الأجرين.",
+                feedbackWrong: "إجابة غير موفقة! الدرس يعلمنا أن الاستمرار في التعلم والاستماع اليومي يرفع المشقة ويزيد الأجر."
+            },
+            {
+                id: 6,
+                level: 3,
+                levelName: "المستوى الثالث - المتقدم 🔵",
+                levelBadgeClass: "badge-advanced",
+                outcome: "التفكير الناقد واستنتاج دلالات الرحمة الإلهية",
+                type: "reasoning",
+                question: "تفكير ناقد: لماذا جعل الله تعالى للمتتعتع في القرآن (الذي يجد صعوبة ويجتهد) أجرين اثنين؟ على ماذا يدل ذلك؟",
+                guideText: "فكر في السبب واستنتج الصفة الإلهية الكريمة الدالة على ذلك!",
+                options: [
+                    { text: "لأن المتتعتع أفضل وأعلى منزلة من القارئ الماهر بكل الأحوال.", correct: false },
+                    { text: "أجرٌ على تلاوته للقرآن، وأجرٌ على اجتهاده وصبره على المشقة؛ وده دلالة على سعة رحمة الله وفضله.", correct: true },
+                    { text: "لأن القرآن كتب للمبتدئين فقط دون الماهرين.", correct: false }
+                ],
+                feedbackCorrect: "استنتاج رائع وتفكير ناقد سليم! الأجران هما (أجر التلاوة + أجر الصبر والاجتهاد)، وهذا يدل على سعة رحمة الله.",
+                feedbackWrong: "إجابة خاطئة! الأجران هما: أجر التلاوة وأجر الاجتهاد، وذلك لحكمة وسعة رحمة الله بعباده."
+            }
+        ];
+
+        // --- 2. متغيرات حالة اللعبة ---
+        let gameMode = 'practice'; // 'practice' أو 'quiz'
+        let studentName = '';
+        let currentQIndex = 0;
+        let score = 0;
+        let answersState = []; // تخزين تفاصيل الإجابات للتحليل
+        let userTempAnswer = null; // الإجابة المؤقتة المحددة للسؤال الحالي
+        let isAnswerSubmitted = false;
+
+        // --- 3. أفعال بدء اللعبة وإدارتها ---
+        function startGame(mode) {
+            gameMode = mode;
+            studentName = document.getElementById('student-name').value.trim() || 'فارس القرآن';
+            
+            // إخفاء شاشة البداية وإظهار شاشة اللعب
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            document.getElementById('screen-game').classList.add('flex');
+
+            // تحديث بيانات الشريط العلوي
+            document.getElementById('display-student-name').innerText = studentName;
+            document.getElementById('display-mode-tag').innerText = mode === 'practice' ? 'وضع التدريب التفاعلي' : 'وضع التقييم النهائي';
+            document.getElementById('display-mode-tag').className = mode === 'practice' ? 'text-xs px-2 py-0.5 rounded font-bold bg-amber-100 text-amber-800' : 'text-xs px-2 py-0.5 rounded font-bold bg-indigo-100 text-indigo-800';
+
+            // إعادة ضبط البيانات
+            currentQIndex = 0;
+            score = 0;
+            answersState = [];
+            
+            loadQuestion();
+        }
+
+        // --- 4. تحميل وعرض السؤال الحالي ---
+        function loadQuestion() {
+            const q = questionsBank[currentQIndex];
+            userTempAnswer = null;
+            isAnswerSubmitted = false;
+
+            // إخفاء مربع التغذية الراجعة
+            const fbBox = document.getElementById('feedback-box');
+            fbBox.classList.add('hidden');
+            fbBox.className = "hidden rounded-2xl p-4 my-3 text-right font-bold text-sm sm:text-base border-2 transition-all";
+
+            // تحديث مؤشرات التقدم
+            document.getElementById('current-q-num').innerText = currentQIndex + 1;
+            document.getElementById('stars-count').innerText = score;
+            document.getElementById('progress-bar').style.width = `${((currentQIndex) / questionsBank.length) * 100}%`;
+
+            // تحديث الشارة والموجه
+            document.getElementById('level-text').innerText = q.levelName;
+            document.getElementById('level-badge').className = `${q.levelBadgeClass} px-3 py-1 rounded-full text-xs sm:text-sm font-extrabold flex items-center gap-1 shadow-sm`;
+            document.getElementById('salem-guide-text').innerText = q.guideText;
+
+            // إعداد زر الإجراء
+            const btnAction = document.getElementById('btn-action');
+            btnAction.innerHTML = `<span>تأكيد الإجابة</span> <i class="fa-solid fa-check"></i>`;
+            btnAction.className = "btn-bounce bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base sm:text-lg px-8 py-2.5 rounded-xl shadow-md border-b-4 border-emerald-800 flex items-center gap-2 opacity-50 cursor-not-allowed";
+            btnAction.disabled = true;
+
+            // بناء كارت السؤال بحسب النوع
+            const qCard = document.getElementById('question-card');
+            let html = `<h3 class="text-lg sm:text-xl font-black text-emerald-900 mb-4 leading-relaxed">${q.question}</h3>`;
+
+            if (q.type === 'mcq' || q.type === 'tf' || q.type === 'scenario' || q.type === 'reasoning') {
+                html += `<div class="space-y-3">`;
+                q.options.forEach((opt, idx) => {
+                    html += `
+                        <button onclick="selectOption(${idx})" id="opt-btn-${idx}" class="opt-btn w-full text-right p-3.5 rounded-xl border-2 border-gray-200 hover:border-emerald-400 bg-gray-50 hover:bg-emerald-50 text-gray-800 font-bold transition-all text-sm sm:text-base flex items-center justify-between">
+                            <span>${opt.text}</span>
+                            <i class="fa-regular fa-circle text-gray-400 text-lg"></i>
+                        </button>
+                    `;
+                });
+                html += `</div>`;
+            } else if (q.type === 'matching') {
+                // سؤال مطابقة
+                html += `<p class="text-xs text-emerald-700 font-bold mb-3"><i class="fa-solid fa-circle-info"></i> اختر الإجابة المناسبة لكل عنصر من القائمة:</p>`;
+                html += `<div class="space-y-4">`;
+                q.pairs.forEach((p, idx) => {
+                    html += `
+                        <div class="bg-emerald-50/60 p-3 rounded-xl border border-emerald-200">
+                            <span class="block font-bold text-emerald-900 text-sm mb-2">✦ ${p.item}</span>
+                            <select id="match-select-${idx}" onchange="checkMatchingSelection()" class="w-full p-2.5 rounded-lg border-2 border-emerald-300 font-bold text-sm bg-white focus:outline-none focus:border-emerald-600">
+                                <option value="">-- اختر النتيجة / الأجر المستحق --</option>
+                                <option value="مع السفرة الكرام البررة (الملائكة)">مع السفرة الكرام البررة (الملائكة)</option>
+                                <option value="له أجران (أجر التلاوة + أجر الاجتهاد)">له أجران (أجر التلاوة + أجر الاجتهاد)</option>
+                            </select>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            } else if (q.type === 'ordering') {
+                // سؤال ترتيب
+                html += `<p class="text-xs text-amber-700 font-bold mb-3"><i class="fa-solid fa-hand-pointer"></i> اضغط على البطاقات بالترتيب التنازلي الصحيح لتكوين الحديث النبوي الشريف:</p>`;
+                // نخلط الأجزاء للتحدي
+                const shuffled = [...q.parts].sort(() => Math.random() - 0.5);
+                window.orderingUserSequence = [];
+                window.orderingOriginalParts = shuffled;
+
+                html += `<div id="ordering-buttons" class="space-y-2 mb-4">`;
+                shuffled.forEach((partText, idx) => {
+                    html += `
+                        <button onclick="clickOrderingItem(${idx})" id="order-btn-${idx}" class="w-full text-right p-3 rounded-xl border-2 border-amber-200 bg-amber-50 hover:bg-amber-100 font-bold text-sm sm:text-base text-amber-900 transition-all flex items-center justify-between">
+                            <span id="order-text-${idx}">${partText}</span>
+                            <span id="order-num-${idx}" class="w-7 h-7 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center font-black text-xs">؟</span>
+                        </button>
+                    `;
+                });
+                html += `</div>`;
+                html += `<button onclick="resetOrdering()" class="text-xs font-bold text-rose-600 hover:underline"><i class="fa-solid fa-rotate-left"></i> إعادة ضبط الترتيب</button>`;
+            }
+
+            qCard.innerHTML = html;
+        }
+
+        // --- 5. منطق اختيار وتفاعل الأنشطة المختلفة ---
+        // أ) الخيارات المتعددة وصح/خطأ
+        function selectOption(index) {
+            if (isAnswerSubmitted && gameMode === 'practice') return;
+            
+            const q = questionsBank[currentQIndex];
+            userTempAnswer = index;
+
+            document.querySelectorAll('.opt-btn').forEach((btn, idx) => {
+                if (idx === index) {
+                    btn.className = "opt-btn w-full text-right p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-100 text-emerald-950 font-black shadow-sm transition-all text-sm sm:text-base flex items-center justify-between";
+                    btn.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600 text-lg";
+                } else {
+                    btn.className = "opt-btn w-full text-right p-3.5 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-800 font-bold transition-all text-sm sm:text-base flex items-center justify-between";
+                    btn.querySelector('i').className = "fa-regular fa-circle text-gray-400 text-lg";
+                }
+            });
+
+            enableActionButton();
+        }
+
+        // ب) التوصيل والمطابقة
+        function checkMatchingSelection() {
+            const sel0 = document.getElementById('match-select-0').value;
+            const sel1 = document.getElementById('match-select-1').value;
+
+            if (sel0 !== "" && sel1 !== "") {
+                userTempAnswer = [sel0, sel1];
+                enableActionButton();
+            } else {
+                userTempAnswer = null;
+                disableActionButton();
+            }
+        }
+
+        // ج) الترتيب التفاعلي
+        function clickOrderingItem(idx) {
+            if (isAnswerSubmitted && gameMode === 'practice') return;
+
+            const partText = window.orderingOriginalParts[idx];
+            if (window.orderingUserSequence.includes(partText)) return; // المختار سابقاً
+
+            window.orderingUserSequence.push(partText);
+            const orderPos = window.orderingUserSequence.length;
+
+            document.getElementById(`order-btn-${idx}`).className = "w-full text-right p-3 rounded-xl border-2 border-emerald-600 bg-emerald-100 font-black text-sm sm:text-base text-emerald-950 transition-all flex items-center justify-between";
+            document.getElementById(`order-num-${idx}`).innerText = `[ ${orderPos} ]`;
+            document.getElementById(`order-num-${idx}`).className = "w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-black text-xs";
+
+            if (window.orderingUserSequence.length === questionsBank[currentQIndex].parts.length) {
+                userTempAnswer = [...window.orderingUserSequence];
+                enableActionButton();
+            }
+        }
+
+        function resetOrdering() {
+            if (isAnswerSubmitted && gameMode === 'practice') return;
+            window.orderingUserSequence = [];
+            userTempAnswer = null;
+            disableActionButton();
+
+            window.orderingOriginalParts.forEach((_, idx) => {
+                document.getElementById(`order-btn-${idx}`).className = "w-full text-right p-3 rounded-xl border-2 border-amber-200 bg-amber-50 hover:bg-amber-100 font-bold text-sm sm:text-base text-amber-900 transition-all flex items-center justify-between";
+                document.getElementById(`order-num-${idx}`).innerText = "؟";
+                document.getElementById(`order-num-${idx}`).className = "w-7 h-7 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center font-black text-xs";
+            });
+        }
+
+        function enableActionButton() {
+            const btnAction = document.getElementById('btn-action');
+            btnAction.disabled = false;
+            btnAction.className = "btn-bounce bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base sm:text-lg px-8 py-2.5 rounded-xl shadow-md border-b-4 border-emerald-800 flex items-center gap-2 opacity-100 cursor-pointer";
+        }
+
+        function disableActionButton() {
+            const btnAction = document.getElementById('btn-action');
+            btnAction.disabled = true;
+            btnAction.className = "btn-bounce bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base sm:text-lg px-8 py-2.5 rounded-xl shadow-md border-b-4 border-emerald-800 flex items-center gap-2 opacity-50 cursor-not-allowed";
+        }
+
+        // --- 6. التعامل مع زر الإجراء (تأكيد أو الانتقال) ---
+        function handleAction() {
+            if (!isAnswerSubmitted) {
+                submitAnswer();
+            } else {
+                nextQuestion();
+            }
+        }
+
+        function submitAnswer() {
+            const q = questionsBank[currentQIndex];
+            let isCorrect = false;
+
+            // تقييم صحة الإجابة بحسب نوع السؤال
+            if (q.type === 'mcq' || q.type === 'tf' || q.type === 'scenario' || q.type === 'reasoning') {
+                isCorrect = q.options[userTempAnswer].correct;
+            } else if (q.type === 'matching') {
+                isCorrect = (userTempAnswer[0] === q.pairs[0].target && userTempAnswer[1] === q.pairs[1].target);
+            } else if (q.type === 'ordering') {
+                isCorrect = true;
+                for (let i = 0; i < q.parts.length; i++) {
+                    if (userTempAnswer[i] !== q.parts[i]) {
+                        isCorrect = false;
+                        break;
+                    }
+                }
+            }
+
+            // تسجيل النتيجة
+            if (isCorrect) score++;
+            answersState.push({
+                questionId: q.id,
+                outcome: q.outcome,
+                isCorrect: isCorrect,
+                level: q.level
+            });
+
+            isAnswerSubmitted = true;
+
+            // في وضع التدريب: إظهار التغذية الراجعة الفورية
+            if (gameMode === 'practice') {
+                const fbBox = document.getElementById('feedback-box');
+                fbBox.classList.remove('hidden');
+
+                if (isCorrect) {
+                    fbBox.className = "rounded-2xl p-4 my-3 text-right font-bold text-sm sm:text-base border-2 bg-emerald-100 border-emerald-400 text-emerald-900 shadow-sm";
+                    fbBox.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-xl ml-1"></i> 🎉 ${q.feedbackCorrect}`;
+                } else {
+                    fbBox.className = "rounded-2xl p-4 my-3 text-right font-bold text-sm sm:text-base border-2 bg-rose-100 border-rose-400 text-rose-900 shadow-sm";
+                    fbBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 text-xl ml-1"></i> 💡 ${q.feedbackWrong}`;
+                }
+
+                // تغيير زر الإجراء إلى الانتقال
+                const btnAction = document.getElementById('btn-action');
+                btnAction.innerHTML = `<span>السؤال التالي</span> <i class="fa-solid fa-arrow-left"></i>`;
+                btnAction.className = "btn-bounce bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-base sm:text-lg px-8 py-2.5 rounded-xl shadow-md border-b-4 border-amber-700 flex items-center gap-2";
+            } else {
+                // في وضع التقييم الاختباري: الانتقال المباشر للسؤال التالي بدون كشف التغذية الراجعة
+                nextQuestion();
+            }
+        }
+
+        function skipQuestion() {
+            if (isAnswerSubmitted && gameMode === 'practice') {
+                nextQuestion();
+                return;
+            }
+            const q = questionsBank[currentQIndex];
+            answersState.push({
+                questionId: q.id,
+                outcome: q.outcome,
+                isCorrect: false,
+                level: q.level
+            });
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < questionsBank.length) {
+                loadQuestion();
+            } else {
+                showFinalResults();
+            }
+        }
+
+        // --- 7. الشاشة الختامية وتحليل الأداء للمعلم والأنصبة ---
+        function showFinalResults() {
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('flex');
+            
+            const resultScreen = document.getElementById('screen-result');
+            resultScreen.classList.remove('hidden');
+            resultScreen.classList.add('flex');
+
+            document.getElementById('final-student-name').innerText = studentName;
+            document.getElementById('score-text').innerText = `${score} / 6`;
+            
+            const percentage = Math.round((score / 6) * 100);
+            document.getElementById('percentage-text').innerText = `${percentage}%`;
+            document.getElementById('correct-count').innerText = score;
+            document.getElementById('wrong-count').innerText = 6 - score;
+
+            // تحديد الرسالة والأيقونة بناءً على النتيجة
+            const iconContainer = document.getElementById('result-icon-container');
+            const titleEl = document.getElementById('result-title');
+
+            if (percentage >= 83) { // 5 أو 6
+                iconContainer.innerHTML = `<div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-amber-500 text-5xl mx-auto shadow-inner border-4 border-amber-300 animate-bounce"><i class="fa-solid fa-crown"></i></div>`;
+                titleEl.innerText = "🌟 إتقان متميز - فارس القرآن العظيم 🌟";
+            } else if (percentage >= 50) { // 3 أو 4
+                iconContainer.innerHTML = `<div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-5xl mx-auto shadow-inner border-4 border-emerald-300"><i class="fa-solid fa-medal"></i></div>`;
+                titleEl.innerText = "👏 نتيجة طيبة - مستواك جيد جداً 👏";
+            } else {
+                iconContainer.innerHTML = `<div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-5xl mx-auto shadow-inner border-4 border-blue-300"><i class="fa-solid fa-book-open-reader"></i></div>`;
+                titleEl.innerText = "💪 محاولة جيدة - تحتاج لمراجعة الحديث 💪";
+            }
+
+            // تحليل نواتج التعلم بالتفصيل (أداة المعلم)
+            const outcomesContainer = document.getElementById('outcomes-analysis');
+            let outcomesHtml = "";
+
+            answersState.forEach((item, idx) => {
+                const statusClass = item.isCorrect ? "text-emerald-700 bg-emerald-100 border-emerald-300" : "text-rose-700 bg-rose-100 border-rose-300";
+                const statusIcon = item.isCorrect ? '<i class="fa-solid fa-circle-check"></i> تم الإتقان' : '<i class="fa-solid fa-circle-xmark"></i> يحتاج دعم وتعزيز';
+                
+                outcomesHtml += `
+                    <div class="p-2.5 rounded-xl border ${statusClass} flex items-center justify-between gap-2">
+                        <div>
+                            <span class="font-extrabold block">س${idx + 1}: ${item.outcome}</span>
+                        </div>
+                        <span class="font-extrabold text-xs px-2 py-1 rounded-lg bg-white/80 shadow-sm flex items-center gap-1">${statusIcon}</span>
+                    </div>
+                `;
+            });
+
+            outcomesContainer.innerHTML = outcomesHtml;
+        }
+
+        function restartGame() {
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('flex');
+            startGame(gameMode);
+        }
+
+        function goHome() {
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('flex');
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('flex');
+            document.getElementById('screen-start').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
